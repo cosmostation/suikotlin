@@ -1,10 +1,12 @@
 plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
+    id 'maven-publish'
 }
+group = 'com.github.cosmostation'
 
 android {
-    namespace 'io.cosmostation.suikotlin'
+    namespace 'com.github.cosmostation.suikotlin'
     compileSdk 33
 
     defaultConfig {
@@ -47,4 +49,17 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.4'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0'
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.release
+                groupId = 'com.github.cosmostation'
+                artifactId = 'suikotlin'
+                version = '0.0.1'
+            }
+        }
+    }
 }

@@ -1,6 +1,6 @@
 package io.cosmostation.suikotlin.api
 
-import io.cosmostation.suikotlin.BuildConfig
+import com.github.cosmostation.suikotlin.BuildConfig
 import io.cosmostation.suikotlin.model.FixedAmountRequest
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor

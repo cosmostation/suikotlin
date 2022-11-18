@@ -3,10 +3,11 @@ buildscript {
     ext.web3jVersion = '4.3.0-android'
     repositories {
         google()
+        mavenCentral()
         jcenter()
-
     }
     dependencies {
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
         classpath 'com.android.tools.build:gradle:7.2.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
@@ -15,6 +16,7 @@ buildscript {
 allprojects {
     repositories {
         google()
+        mavenCentral()
         jcenter()
         maven { url 'https://jitpack.io' }
     }
