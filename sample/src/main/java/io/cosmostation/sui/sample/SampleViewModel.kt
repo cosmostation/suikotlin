@@ -89,7 +89,8 @@ class SampleViewModel : ViewModel() {
             transfer?.let { transferTxBytes ->
                 _keyPair.value?.let { keyPair ->
                     val txBytes = Base64.getDecoder().decode(transferTxBytes.txBytes)
-                    val signedTxBytes = SuiClient.instance.sign(keyPair, txBytes)
+                    val intentMessage = byteArrayOf(0, 0, 0) + txBytes
+                    val signedTxBytes = SuiClient.instance.sign(keyPair, intentMessage)
                     val executeResult = SuiClient.instance.executeTransaction(
                         txBytes, signedTxBytes, keyPair
                     )
