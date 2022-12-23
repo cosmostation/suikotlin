@@ -84,6 +84,15 @@ class SampleViewModel : ViewModel() {
 
     fun transferObject(objectInfo: SuiObjectInfo, receiver: String, sender: String) =
         viewModelScope.launch {
+//            val transfer =
+//                SuiClient.instance.transferObject(objectInfo.objectId, receiver, sender, 100)
+//            val transfer = SuiClient.instance.moveCall(
+//                _address.value!!, "0x2", "devnet_nft", "mint", listOf(), listOf(
+//                    "Example NFT",
+//                    "Example NFT",
+//                    "ipfs://bafkreibngqhl3gaa7daob4i2vccziay2jjlp435cf66vhono7nrvww53ty"
+//                ), null, 10000
+//            )
             val transfer =
                 SuiClient.instance.transferObject(objectInfo.objectId, receiver, sender, 100)
             transfer?.let { transferTxBytes ->

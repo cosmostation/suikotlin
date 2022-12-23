@@ -1,7 +1,6 @@
 package io.cosmostation.suikotlin
 
 import android.app.Application
-import androidx.annotation.IntDef
 import com.develop.mnemonic.MnemonicUtils
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -87,13 +86,53 @@ class SuiClient {
     suspend fun faucet(address: String) =
         FaucetService.create().faucet(FixedAmountRequest(Recipient(address))).body()
 
-    suspend fun transferObject(
+    suspend fun transferSui(
         objectId: String, receiver: String, sender: String, gasBudget: Int, amount: Int? = null
     ): SuiWrappedTxBytes? {
         val params = mutableListOf(sender, objectId, gasBudget, receiver)
         amount?.let { params.add(it) }
         val result = ApiService.create().postJsonRpcRequest(
             JsonRpcRequest("sui_transferSui", params)
+        ).body()?.result
+        return Gson().fromJson(Gson().toJson(result), SuiWrappedTxBytes::class.java)
+    }
+
+    suspend fun transferObject(
+        objectId: String,
+        receiver: String,
+        sender: String,
+        gasBudget: Int,
+        gasObjectId: String? = null
+    ): SuiWrappedTxBytes? {
+        val params = mutableListOf(sender, objectId, gasObjectId, gasBudget, receiver)
+        val result = ApiService.create().postJsonRpcRequest(
+            JsonRpcRequest("sui_transferObject", params)
+        ).body()?.result
+        return Gson().fromJson(Gson().toJson(result), SuiWrappedTxBytes::class.java)
+    }
+
+    suspend fun moveCall(
+        sender: String,
+        packageObjectId: String,
+        module: String,
+        function: String,
+        typeArguments: List<String> = listOf(),
+        arguments: List<String> = listOf(),
+        gasPayment: String? = null,
+        gasBudget: Int
+    ): SuiWrappedTxBytes? {
+        val params = mutableListOf(
+            sender,
+            packageObjectId,
+            module,
+            function,
+            typeArguments,
+            arguments,
+            gasPayment,
+            gasBudget
+        )
+        val result = ApiService.create().postJsonRpcRequest(
+            JsonRpcRequest("sui_moveCall", params)
         ).body()?.result
         return Gson().fromJson(Gson().toJson(result), SuiWrappedTxBytes::class.java)
     }
