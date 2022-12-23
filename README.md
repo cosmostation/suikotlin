@@ -10,7 +10,7 @@ Android SDK for Sui
 ## Dependency
 
 ```
-implementation 'com.github.cosmostation:suikotlin:0.0.1'
+implementation 'com.github.cosmostation:suikotlin:0.0.2'
 ```
 
 
@@ -96,9 +96,30 @@ suspend fun fetchCustomRequests(requests: List<JsonRpcRequest>): List<JsonRpcRes
 suspend fun faucet(address: String): Any
 ```
 
-### Transfer sui object
+### Transfer object
 ```kotlin
 suspend fun transferObject(
+    objectId: String, receiver: String, sender: String, gasBudget: Int, gasObjectId: String? = null)
+): SuiWrappedTxBytes?
+```
+
+### Move Call
+```kotlin
+suspend fun moveCall(
+    sender: String,
+    packageObjectId: String,
+    module: String,
+    function: String,
+    typeArguments: List<String> = listOf(),
+    arguments: List<String> = listOf(),
+    gasPayment: String? = null,
+    gasBudget: Int
+): SuiWrappedTxBytes?
+```
+
+### Transfer sui
+```kotlin
+suspend fun transferSui(
     objectId: String, receiver: String, sender: String, gasBudget: Int, amount: Int? = null
 ): SuiWrappedTxBytes?
 ```
