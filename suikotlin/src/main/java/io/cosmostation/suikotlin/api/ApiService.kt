@@ -1,6 +1,7 @@
 package io.cosmostation.suikotlin.api
 
 import com.github.cosmostation.suikotlin.BuildConfig
+import io.cosmostation.suikotlin.SuiClient
 import io.cosmostation.suikotlin.model.JsonRpcRequest
 import io.cosmostation.suikotlin.model.JsonRpcResponse
 import okhttp3.OkHttpClient
@@ -14,10 +15,8 @@ import java.util.concurrent.TimeUnit
 
 interface ApiService {
     companion object {
-        private const val SUI_DEV_RPC = "https://fullnode.devnet.sui.io"
-
         fun create(): ApiService {
-            val builder = Retrofit.Builder().baseUrl(SUI_DEV_RPC)
+            val builder = Retrofit.Builder().baseUrl(SuiClient.instance.currentNetwork.rpcUrl)
                 .addConverterFactory(GsonConverterFactory.create())
 
             if (BuildConfig.DEBUG) {

@@ -22,6 +22,10 @@ class SuiClient {
             setupBouncyCastle()
         }
 
+        fun configure(network: Network) {
+            instance.currentNetwork = network
+        }
+
         private fun setupBouncyCastle() {
             val provider = Security.getProvider(BouncyCastleProvider.PROVIDER_NAME) ?: return
 
@@ -33,6 +37,8 @@ class SuiClient {
             Security.insertProviderAt(BouncyCastleProvider(), 1)
         }
     }
+
+    var currentNetwork: Network = Network.Devnet()
 
     fun generateMnemonic(): String = MnemonicUtils.generateMnemonic()
 
