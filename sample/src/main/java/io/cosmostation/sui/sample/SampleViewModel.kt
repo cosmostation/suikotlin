@@ -5,15 +5,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import io.cosmostation.suikotlin.SuiClient
-import io.cosmostation.suikotlin.model.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import io.cosmostation.suikotlin.model.EdDSAKeyPair
+import io.cosmostation.suikotlin.model.SuiObjectInfo
+import io.cosmostation.suikotlin.model.TransactionQuery
 import kotlinx.coroutines.launch
-import java.math.BigInteger
+import java.math.BigDecimal
 import java.util.*
-import kotlin.collections.ArrayList
 
 class SampleViewModel : ViewModel() {
     private val _mnemonic = MutableLiveData<String>()
@@ -85,8 +83,9 @@ class SampleViewModel : ViewModel() {
 
     fun transferObject(objectInfo: SuiObjectInfo, receiver: String, sender: String) =
         viewModelScope.launch {
-            val transfer =
-                SuiClient.instance.transferSui(objectInfo.objectId, receiver, sender, 1000, BigInteger("100000"))
+            val transfer = SuiClient.instance.transferSui(
+                objectInfo.objectId, receiver, sender, 1000, BigDecimal("10000000")
+            )
 //            val transfer = SuiClient.instance.moveCall(
 //                _address.value!!, "0x2", "devnet_nft", "mint", listOf(), listOf(
 //                    "Example NFT",
