@@ -10,6 +10,7 @@ import io.cosmostation.suikotlin.key.SuiKey
 import io.cosmostation.suikotlin.model.*
 import io.cosmostation.suikotlin.secure.CipherHelper
 import org.bouncycastle.jce.provider.BouncyCastleProvider
+import java.math.BigInteger
 import java.security.Security
 import java.util.*
 
@@ -93,7 +94,7 @@ class SuiClient {
         FaucetService.create().faucet(FixedAmountRequest(Recipient(address))).body()
 
     suspend fun transferSui(
-        objectId: String, receiver: String, sender: String, gasBudget: Int, amount: Int? = null
+        objectId: String, receiver: String, sender: String, gasBudget: Int, amount: BigInteger? = null
     ): SuiWrappedTxBytes? {
         val params = mutableListOf(sender, objectId, gasBudget, receiver)
         amount?.let { params.add(it) }
