@@ -153,12 +153,13 @@ class SuiClient {
     ): Any? {
         val params = mutableListOf(
             Base64.getEncoder().encodeToString(txBytes),
-            "ED25519",
-            Base64.getEncoder().encodeToString(signedBytes),
-            Base64.getEncoder().encodeToString(keyPair.publicKey.abyte),
+            Base64.getEncoder()
+                .encodeToString(byteArrayOf(0x00) + signedBytes + keyPair.publicKey.abyte),
             "WaitForLocalExecution"
         )
+
         return ApiService.create()
-            .postJsonRpcRequest(JsonRpcRequest("sui_executeTransaction", params)).body()?.result
+            .postJsonRpcRequest(JsonRpcRequest("sui_executeTransactionSerializedSig", params))
+            .body()?.result
     }
 }
