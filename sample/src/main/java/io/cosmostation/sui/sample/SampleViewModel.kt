@@ -11,6 +11,7 @@ import io.cosmostation.suikotlin.model.SuiObjectInfo
 import io.cosmostation.suikotlin.model.TransactionQuery
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
+import java.math.BigInteger
 import java.util.*
 
 class SampleViewModel : ViewModel() {
@@ -84,7 +85,7 @@ class SampleViewModel : ViewModel() {
     fun transferObject(objectInfo: SuiObjectInfo, receiver: String, sender: String) =
         viewModelScope.launch {
             val transfer = SuiClient.instance.transferSui(
-                objectInfo.objectId, receiver, sender, 1000, BigDecimal("10000000")
+                objectInfo.objectId, receiver, sender, 1000, BigInteger("10000000")
             )
 //            val transfer = SuiClient.instance.moveCall(
 //                _address.value!!, "0x2", "devnet_nft", "mint", listOf(), listOf(

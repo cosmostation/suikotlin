@@ -49,6 +49,7 @@ class SuiClient {
     fun sign(keyPair: EdDSAKeyPair, data: ByteArray) = SuiKey.sign(keyPair, data)
 
     suspend fun getObjectsByOwner(address: String): List<SuiObjectInfo>? {
+//        sui_getOwnedObjects
         val request = JsonRpcRequest("sui_getObjectsOwnedByAddress", listOf(address))
         val result = ApiService.create().postJsonRpcRequest(request).body()?.result
         return Gson().fromJson<List<SuiObjectInfo>>(

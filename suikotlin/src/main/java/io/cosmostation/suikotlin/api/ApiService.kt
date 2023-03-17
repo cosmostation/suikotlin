@@ -23,7 +23,7 @@ interface ApiService {
                 val interceptor = HttpLoggingInterceptor()
                 interceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
                 val client = OkHttpClient.Builder().addInterceptor(interceptor)
-                    .connectTimeout(10, TimeUnit.SECONDS).build()
+                    .connectTimeout(15, TimeUnit.SECONDS).build()
                 builder.client(client)
             }
 
