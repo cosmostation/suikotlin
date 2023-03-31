@@ -10,13 +10,12 @@ import io.cosmostation.suikotlin.SuiClient
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val viewModel: SampleViewModel by viewModels()
-    private val preloadMnemonic = ""
+    private val preloadMnemonic = "wing mammal best spend that cave decline zone legal affair demand pulp"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         setupView()
         setupViewModel()
     }

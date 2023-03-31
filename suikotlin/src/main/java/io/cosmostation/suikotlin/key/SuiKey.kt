@@ -10,6 +10,7 @@ import net.i2p.crypto.eddsa.spec.EdDSANamedCurveTable
 import net.i2p.crypto.eddsa.spec.EdDSAParameterSpec
 import net.i2p.crypto.eddsa.spec.EdDSAPrivateKeySpec
 import net.i2p.crypto.eddsa.spec.EdDSAPublicKeySpec
+import org.bouncycastle.jcajce.provider.digest.Blake2b
 import java.security.MessageDigest
 import java.security.Signature
 import javax.crypto.Mac
@@ -18,22 +19,19 @@ import javax.crypto.spec.SecretKeySpec
 object SuiKey {
     private const val MAC_SECRET_KEY = "ed25519 seed"
     private const val HMAC_SHA512_ALGORITHM_KEY = "HmacSHA512"
-    private const val MESSAGE_DIGEST_ALGORITHM_SHA3_256 = "SHA3-256"
     private val SUI_HD_PATH = listOf(44, 784, 0, 0, 0)
-    private const val SUI_ADDRESS_LENGTH = 40
+    private const val SUI_ADDRESS_LENGTH = 64
 
     fun getSuiAddress(mnemonic: String, path: List<Int> = SUI_HD_PATH): String {
         val keyPair = getKeyPair(mnemonic, path)
-        val digest: MessageDigest = MessageDigest.getInstance(MESSAGE_DIGEST_ALGORITHM_SHA3_256)
-        val digestBytes: ByteArray = digest.digest(ByteArray(1) + keyPair.publicKey.abyte)
-        val hex = Utils.bytesToHex(digestBytes)
-        return "0x${hex.substring(0, SUI_ADDRESS_LENGTH)}"
+        return getSuiAddress(keyPair)
     }
 
     fun getSuiAddress(keyPair: EdDSAKeyPair): String {
-        val digest: MessageDigest = MessageDigest.getInstance(MESSAGE_DIGEST_ALGORITHM_SHA3_256)
-        val digestBytes: ByteArray = digest.digest(ByteArray(1) + keyPair.publicKey.abyte)
-        val hex = Utils.bytesToHex(digestBytes)
+        val tmp = ByteArray(1) + keyPair.publicKey.abyte
+        val blake2b = Blake2b.Blake2b256()
+        blake2b.update(tmp)
+        val hex = Utils.bytesToHex(blake2b.digest())
         return "0x${hex.substring(0, SUI_ADDRESS_LENGTH)}"
     }
 

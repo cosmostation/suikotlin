@@ -1,12 +1,19 @@
 package io.cosmostation.suikotlin.model
 
 data class SuiObjectInfo(
-    val objectId: String,
-    val version: Int,
-    val digest: String,
-    val type: String,
-    val owner: SuiObjectOwner,
-    val previousTransaction: String
+    val objectId: String, val version: Int, val digest: String, val type: String, val owner: SuiObjectOwner, val previousTransaction: String
+)
+
+data class SuiObjectData(
+    val data: SuiObjectInfo,
+)
+
+data class SuiNextCursor(
+    val objectId: String, val atCheckpoint: Long
+)
+
+data class SuiObjectDataResult(
+    val data: List<SuiObjectData>, val hasNextPage: Boolean, val nextCursor: SuiNextCursor, val limit: Int
 )
 
 data class SuiObjectOwner(val AddressOwner: String)
