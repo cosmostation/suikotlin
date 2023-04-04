@@ -66,16 +66,16 @@ class SuiClient {
 
     suspend fun getTransactions(
         transactionQuery: TransactionQuery, nextOffset: String? = null, limit: Int? = null, descending: Boolean = false
-    ): SuiTransactionDigest? {
+    ): List<SuiTransaction> {
         val request = JsonRpcRequest(
-            "sui_getTransactions", listOf(transactionQuery, nextOffset, limit, descending)
+            "suix_queryTransactionBlocks", listOf(SuiTransactionQueryFilter(transactionQuery, SuiTransactionBlockResponseOptions(showInput = true, showEffects = true, showBalanceChanges = true)), nextOffset, limit, descending)
         )
         val result = ApiService.create().postJsonRpcRequest(request).body()?.result
-        return Gson().fromJson(Gson().toJson(result), SuiTransactionDigest::class.java)
+        return Gson().fromJson(Gson().toJson(result), SuiTransactionDataResult::class.java).data
     }
 
     suspend fun getTransactionDetails(digests: List<String>): List<String>? {
-        val request = digests.map { JsonRpcRequest("sui_getTransaction", listOf(it)) }
+        val request = digests.map { JsonRpcRequest("sui_multiGetTransactionBlocks", listOf(it)) }
         return ApiService.create().postJsonRpcRequests(request).body()?.map { Gson().toJson(it.result) }?.toList()
     }
 
@@ -90,7 +90,7 @@ class SuiClient {
     ): SuiWrappedTxBytes? {
         val params = mutableListOf(sender, objectId, gasBudget, receiver, amount)
         val result = ApiService.create().postJsonRpcRequest(
-            JsonRpcRequest("sui_transferSui", params)
+            JsonRpcRequest("unsafe_transferSui", params)
         ).body()?.result
         return Gson().fromJson(Gson().toJson(result), SuiWrappedTxBytes::class.java)
     }
@@ -100,7 +100,7 @@ class SuiClient {
     ): SuiWrappedTxBytes? {
         val params: MutableList<Any?> = mutableListOf(sender, objectIds, receivers, amounts, gasObjectId, gasBudget)
         val result = ApiService.create().postJsonRpcRequest(
-            JsonRpcRequest("sui_pay", params)
+            JsonRpcRequest("unsafe_pay", params)
         ).body()?.result
         return Gson().fromJson(Gson().toJson(result), SuiWrappedTxBytes::class.java)
     }
@@ -110,7 +110,7 @@ class SuiClient {
     ): SuiWrappedTxBytes? {
         val params: MutableList<Any?> = mutableListOf(sender, objectIds, receivers, amounts, gasBudget)
         val result = ApiService.create().postJsonRpcRequest(
-            JsonRpcRequest("sui_paySui", params)
+            JsonRpcRequest("unsafe_paySui", params)
         ).body()?.result
         return Gson().fromJson(Gson().toJson(result), SuiWrappedTxBytes::class.java)
     }
@@ -120,7 +120,7 @@ class SuiClient {
     ): SuiWrappedTxBytes? {
         val params = mutableListOf(sender, objectId, gasObjectId, gasBudget, receiver)
         val result = ApiService.create().postJsonRpcRequest(
-            JsonRpcRequest("sui_transferObject", params)
+            JsonRpcRequest("unsafe_transferObject", params)
         ).body()?.result
         return Gson().fromJson(Gson().toJson(result), SuiWrappedTxBytes::class.java)
     }
@@ -132,7 +132,7 @@ class SuiClient {
             sender, packageObjectId, module, function, typeArguments, arguments, gasPayment, gasBudget
         )
         val result = ApiService.create().postJsonRpcRequest(
-            JsonRpcRequest("sui_moveCall", params)
+            JsonRpcRequest("unsafe_moveCall", params)
         ).body()?.result
         return Gson().fromJson(Gson().toJson(result), SuiWrappedTxBytes::class.java)
     }
