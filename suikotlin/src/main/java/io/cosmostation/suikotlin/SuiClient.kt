@@ -49,13 +49,13 @@ class SuiClient {
     fun sign(keyPair: EdDSAKeyPair, data: ByteArray) = SuiKey.sign(keyPair, data)
 
     suspend fun getObjectsByOwner(address: String): List<SuiObjectInfo> {
-        val request = JsonRpcRequest("suix_getOwnedObjects", listOf(address))
+        val request = JsonRpcRequest("suix_getOwnedObjects", listOf(address, SuiObjectResponseQuery(null, SuiObjectDataOptions(showContent = true))))
         val result = ApiService.create().postJsonRpcRequest(request).body()?.result
         return Gson().fromJson(Gson().toJson(result), SuiObjectDataResult::class.java).data.map { it.data }
     }
 
     suspend fun getMultiObjectDetail(objectIds: List<String>): Any? {
-        val request = JsonRpcRequest("sui_multiGetObjects", objectIds)
+        val request = JsonRpcRequest("sui_multiGetObjects", listOf(objectIds, SuiObjectResponseQuery(null, SuiObjectDataOptions(showContent = true))))
         return ApiService.create().postJsonRpcRequest(request).body()?.result
     }
 
@@ -98,17 +98,15 @@ class SuiClient {
     suspend fun pay(
         objectIds: List<String>, receivers: List<String>, sender: String, gasBudget: Int, gasObjectId: String? = null, amounts: List<BigInteger>
     ): SuiWrappedTxBytes? {
-        val params: MutableList<Any?> = mutableListOf(sender, objectIds, receivers, amounts, gasObjectId, gasBudget)
-        val result = ApiService.create().postJsonRpcRequest(
-            JsonRpcRequest("unsafe_pay", params)
-        ).body()?.result
+        val params: MutableList<Any?> = mutableListOf(sender, objectIds, receivers, amounts.map { it.toString() }, gasObjectId, gasBudget)
+        val result = ApiService.create().postJsonRpcRequest(JsonRpcRequest("unsafe_pay", params)).body()?.result
         return Gson().fromJson(Gson().toJson(result), SuiWrappedTxBytes::class.java)
     }
 
     suspend fun paySui(
         objectIds: List<String>, receivers: List<String>, sender: String, gasBudget: Int, amounts: List<BigInteger>
     ): SuiWrappedTxBytes? {
-        val params: MutableList<Any?> = mutableListOf(sender, objectIds, receivers, amounts, gasBudget)
+        val params: MutableList<Any?> = mutableListOf(sender, objectIds, receivers, amounts.map { it.toString() }, gasBudget)
         val result = ApiService.create().postJsonRpcRequest(
             JsonRpcRequest("unsafe_paySui", params)
         ).body()?.result
@@ -138,14 +136,9 @@ class SuiClient {
     }
 
     suspend fun executeTransaction(
-        txBytes: ByteArray, signedBytes: ByteArray, keyPair: EdDSAKeyPair
+        txBytes: ByteArray, signedBytes: ByteArray, keyPair: EdDSAKeyPair, responseOptions: SuiTransactionBlockResponseOptions? = null
     ): Any? {
-        val params = mutableListOf(
-            Base64.getEncoder().encodeToString(txBytes), listOf(
-                Base64.getEncoder().encodeToString(byteArrayOf(0x00) + signedBytes + keyPair.publicKey.abyte)
-            ), "WaitForLocalExecution"
-        )
-
+        val params = mutableListOf(Base64.getEncoder().encodeToString(txBytes), listOf(Base64.getEncoder().encodeToString(byteArrayOf(0x00) + signedBytes + keyPair.publicKey.abyte)), responseOptions, "WaitForLocalExecution")
         return ApiService.create().postJsonRpcRequest(JsonRpcRequest("sui_executeTransactionBlock", params)).body()?.result
     }
 }

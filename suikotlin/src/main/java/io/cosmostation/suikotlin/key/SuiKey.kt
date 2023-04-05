@@ -54,10 +54,12 @@ object SuiKey {
     }
 
     fun sign(keyPair: EdDSAKeyPair, data: ByteArray): ByteArray {
+        val blake2b = Blake2b.Blake2b256()
+        blake2b.update(data)
         val spec: EdDSAParameterSpec = EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519)
         val signature: Signature = EdDSAEngine(MessageDigest.getInstance(spec.hashAlgorithm))
         signature.initSign(keyPair.privateKey)
-        signature.update(data)
+        signature.update(blake2b.digest())
         return signature.sign()
     }
 
