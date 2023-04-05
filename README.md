@@ -10,7 +10,7 @@ Android SDK for Sui
 ## Dependency
 
 ```
-implementation 'com.github.cosmostation:suikotlin:0.0.2'
+implementation 'com.github.cosmostation:suikotlin:0.1.2'
 ```
 
 
@@ -56,28 +56,22 @@ fun sign(keyPair: EdDSAKeyPair, data: ByteArray): ByteArray
 
 ### Get objects by address
 ```kotlin
-suspend fun getObjectsByOwner(address: String): List<SuiObjectInfo>?
+suspend fun getObjectsByOwner
 ```
 
 ### Get object details from sui objects
 ```kotlin
-//@TODO parse string
-suspend fun getObjectDetails(objectInfos: List<SuiObjectInfo>): List<String>?
+suspend fun getObjectDetails
 ```
 
 ### Get transactions
 ```kotlin
-suspend fun getTransactions(
-    transactionQuery: TransactionQuery,
-    nextOffset: String? = null,
-    limit: Int? = null,
-    descending: Boolean = false
-): SuiTransactionDigest?
+suspend fun getTransactions
 ```
 
 ### Get transaction details from transaction digests
 ```kotlin
-suspend fun getTransactionDetails(digests: List<String>): List<String>?
+suspend fun getTransactionDetails
 ```
 
 ### Fetch custom request(support sui json-rpc specs.)
@@ -85,49 +79,32 @@ suspend fun getTransactionDetails(digests: List<String>): List<String>?
 suspend fun fetchCustomRequest(requests: JsonRpcRequest): JsonRpcResponse
 ```
 
-### Fetch custom request list(support sui json-rpc specs.)
+### Fetch custom request list(support sui json-rpc specs.) : Batch not working
 ```kotlin
 suspend fun fetchCustomRequests(requests: List<JsonRpcRequest>): List<JsonRpcResponse>
 ```
 
 ### Faucet
 ```kotlin
-//@TODO parse string 
-suspend fun faucet(address: String): Any
+suspend fun faucet
 ```
 
 ### Transfer object
 ```kotlin
-suspend fun transferObject(
-    objectId: String, receiver: String, sender: String, gasBudget: Int, gasObjectId: String? = null)
-): SuiWrappedTxBytes?
+suspend fun transferObject
 ```
 
 ### Move Call
 ```kotlin
-suspend fun moveCall(
-    sender: String,
-    packageObjectId: String,
-    module: String,
-    function: String,
-    typeArguments: List<String> = listOf(),
-    arguments: List<String> = listOf(),
-    gasPayment: String? = null,
-    gasBudget: Int
-): SuiWrappedTxBytes?
+suspend fun moveCall
 ```
 
 ### Transfer sui
 ```kotlin
-suspend fun transferSui(
-    objectId: String, receiver: String, sender: String, gasBudget: Int, amount: Int? = null
-): SuiWrappedTxBytes?
+suspend fun transferSui
 ```
 
 ### Execute signed transaction
 ```kotlin
-//@TODO parse string 
-suspend fun executeTransaction(
-    txBytes: ByteArray, signedBytes: ByteArray, keyPair: EdDSAKeyPair
-): Any?
+suspend fun executeTransaction
 ```
