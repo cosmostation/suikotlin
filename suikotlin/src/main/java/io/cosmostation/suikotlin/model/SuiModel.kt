@@ -4,9 +4,8 @@ data class SuiObjectInfo(val objectId: String, val version: Int, val digest: Str
 
 data class SuiObjectData(val data: SuiObjectInfo)
 
-data class SuiNextCursor(val objectId: String)
-
-data class SuiObjectDataResult(val data: List<SuiObjectData>, val hasNextPage: Boolean, val nextCursor: SuiNextCursor)
+//data class SuiObjectDataResult(val data: List<SuiObjectData>, val hasNextPage: Boolean, val nextCursor: String)
+data class SuiObjectDataResult(val data: List<SuiObjectData>, val hasNextPage: Boolean)
 
 data class SuiTransactionDataResult(val data: List<SuiTransaction>, val hasNextPage: Boolean, val nextCursor: String)
 
