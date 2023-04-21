@@ -8,6 +8,7 @@ import com.google.gson.Gson
 import io.cosmostation.suikotlin.SuiClient
 import io.cosmostation.suikotlin.model.EdDSAKeyPair
 import io.cosmostation.suikotlin.model.SuiObjectInfo
+import io.cosmostation.suikotlin.model.SuiTransaction
 import io.cosmostation.suikotlin.model.TransactionQuery
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
@@ -30,11 +31,8 @@ class SampleViewModel : ViewModel() {
     private val _objectDetails = MutableLiveData<List<String>>()
     val objectDetails: LiveData<List<String>> get() = _objectDetails
 
-    private val _transactions = MutableLiveData<List<String>>()
-    val transactions: LiveData<List<String>> get() = _transactions
-
-    private val _transactionDetails = MutableLiveData<List<String>>()
-    val transactionDetails: LiveData<List<String>> get() = _transactionDetails
+    private val _transactions = MutableLiveData<List<SuiTransaction>>()
+    val transactions: LiveData<List<SuiTransaction>> get() = _transactions
 
     private val _toastMessage = MutableLiveData<String>()
     val toastMessage: LiveData<String> get() = _toastMessage
@@ -63,30 +61,22 @@ class SampleViewModel : ViewModel() {
         }
     }
 
-    fun getTransactionDetails() = viewModelScope.launch {
-        _transactions.value?.let { digests ->
-            _transactionDetails.postValue(SuiClient.instance.getTransactionDetails(digests))
-        }
-    }
-
     fun getTransactions(address: String) = viewModelScope.launch {
-        val digests = mutableListOf<String>()
+        val digests = mutableListOf<SuiTransaction>()
         _transactions.value?.forEach { digests.add(it) }
 
         val toDigest = SuiClient.instance.getTransactions(TransactionQuery.ToAddress(address))
-        toDigest?.data?.forEach { digests.add(it) }
-
+        digests.addAll(toDigest)
         val fromDigest = SuiClient.instance.getTransactions(TransactionQuery.FromAddress(address))
-        fromDigest?.data?.forEach { digests.add(it) }
+        digests.addAll(fromDigest)
 
         _transactions.postValue(digests)
     }
 
-    fun transferObject(objectInfo: SuiObjectInfo, receiver: String, sender: String) =
-        viewModelScope.launch {
-            val transfer = SuiClient.instance.transferSui(
-                objectInfo.objectId, receiver, sender, 1000, BigInteger("10000000")
-            )
+    fun transferObject(objectInfo: SuiObjectInfo, receiver: String, sender: String) = viewModelScope.launch {
+        val transfer = SuiClient.instance.transferSui(
+            objectInfo.objectId, receiver, sender, 1000, BigInteger("10000000")
+        )
 //            val transfer = SuiClient.instance.moveCall(
 //                _address.value!!, "0x2", "devnet_nft", "mint", listOf(), listOf(
 //                    "Example NFT",
@@ -96,17 +86,17 @@ class SampleViewModel : ViewModel() {
 //            )
 //            val transfer =
 //                SuiClient.instance.transferObject(objectInfo.objectId, receiver, sender, 100)
-            transfer?.let { transferTxBytes ->
-                _keyPair.value?.let { keyPair ->
-                    val txBytes = Base64.getDecoder().decode(transferTxBytes.txBytes)
-                    val intentMessage = byteArrayOf(0, 0, 0) + txBytes
-                    val signedTxBytes = SuiClient.instance.sign(keyPair, intentMessage)
-                    val executeResult = SuiClient.instance.executeTransaction(
-                        txBytes, signedTxBytes, keyPair
-                    )
-                    _toastMessage.postValue(Gson().toJson(executeResult))
-                }
+        transfer?.let { transferTxBytes ->
+            _keyPair.value?.let { keyPair ->
+                val txBytes = Base64.getDecoder().decode(transferTxBytes.txBytes)
+                val intentMessage = byteArrayOf(0, 0, 0) + txBytes
+                val signedTxBytes = SuiClient.instance.sign(keyPair, intentMessage)
+                val executeResult = SuiClient.instance.executeTransaction(
+                    txBytes, signedTxBytes, keyPair
+                )
+                _toastMessage.postValue(Gson().toJson(executeResult))
             }
-
         }
+
+    }
 }

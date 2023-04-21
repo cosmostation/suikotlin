@@ -63,13 +63,6 @@
         android:text="get transactions" />
 
     <Button
-        android:id="@+id/get_transaction_details"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:text="get transaction details" />
-
-    <Button
         android:id="@+id/transfer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

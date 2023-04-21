@@ -45,10 +45,6 @@ class MainActivity : AppCompatActivity() {
             viewModel.address.value?.let { address -> viewModel.getTransactions(address) }
         }
 
-        binding.getTransactionDetails.setOnClickListener {
-            viewModel.getTransactionDetails()
-        }
-
         binding.transfer.setOnClickListener {
             viewModel.address.value?.let { address ->
                 viewModel.objectInfos.value?.let {
@@ -85,12 +81,6 @@ class MainActivity : AppCompatActivity() {
         viewModel.transactions.observe(this) {
             Toast.makeText(
                 this@MainActivity, "${it.size} Transactions loaded !", Toast.LENGTH_SHORT
-            ).show()
-        }
-
-        viewModel.transactionDetails.observe(this) {
-            Toast.makeText(
-                this@MainActivity, "${it.size} Transaction Details loaded !", Toast.LENGTH_SHORT
             ).show()
         }
 
