@@ -11,7 +11,6 @@ import io.cosmostation.suikotlin.model.SuiObjectInfo
 import io.cosmostation.suikotlin.model.SuiTransaction
 import io.cosmostation.suikotlin.model.TransactionQuery
 import kotlinx.coroutines.launch
-import java.math.BigDecimal
 import java.math.BigInteger
 import java.util.*
 
