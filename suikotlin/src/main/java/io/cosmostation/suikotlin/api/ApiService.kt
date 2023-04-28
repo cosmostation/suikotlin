@@ -21,10 +21,10 @@ interface ApiService {
             if (BuildConfig.DEBUG) {
                 val interceptor = HttpLoggingInterceptor()
                 interceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
-                val client = OkHttpClient.Builder().addInterceptor(interceptor).connectTimeout(60, TimeUnit.SECONDS).build()
+                val client = OkHttpClient.Builder().addInterceptor(interceptor).writeTimeout(30, TimeUnit.SECONDS).connectTimeout(180, TimeUnit.SECONDS).readTimeout(180, TimeUnit.SECONDS).build()
                 builder.client(client)
             } else {
-                val client = OkHttpClient.Builder().connectTimeout(180, TimeUnit.SECONDS).build()
+                val client = OkHttpClient.Builder().writeTimeout(30, TimeUnit.SECONDS).connectTimeout(180, TimeUnit.SECONDS).readTimeout(180, TimeUnit.SECONDS).build()
                 builder.client(client)
             }
 
