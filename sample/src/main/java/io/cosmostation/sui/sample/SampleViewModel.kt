@@ -56,7 +56,8 @@ class SampleViewModel : ViewModel() {
 
     fun getObjectsDetails() = viewModelScope.launch {
         _objectInfos.value?.let { objects ->
-            _objectDetails.postValue(SuiClient.instance.getObjectDetails(objects))
+            val multiObjects = SuiClient.instance.getMultiObjectDetail(objects.map { it.objectId })
+            _toastMessage.postValue(Gson().toJson(multiObjects))
         }
     }
 
@@ -74,7 +75,7 @@ class SampleViewModel : ViewModel() {
 
     fun transferObject(objectInfo: SuiObjectInfo, receiver: String, sender: String) = viewModelScope.launch {
         val transfer = SuiClient.instance.transferSui(
-            objectInfo.objectId, receiver, sender, 1000, BigInteger("10000000")
+            objectInfo.objectId, receiver, sender, BigInteger("10000"), BigInteger("10000000")
         )
 //            val transfer = SuiClient.instance.moveCall(
 //                _address.value!!, "0x2", "devnet_nft", "mint", listOf(), listOf(

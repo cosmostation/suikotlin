@@ -4,7 +4,6 @@ data class SuiObjectInfo(val objectId: String, val version: Int, val digest: Str
 
 data class SuiObjectData(val data: SuiObjectInfo)
 
-//data class SuiObjectDataResult(val data: List<SuiObjectData>, val hasNextPage: Boolean, val nextCursor: String)
 data class SuiObjectDataResult(val data: List<SuiObjectData>, val hasNextPage: Boolean)
 
 data class SuiTransactionDataResult(val data: List<SuiTransaction>, val hasNextPage: Boolean, val nextCursor: String)
@@ -21,7 +20,7 @@ data class ImmOrOwnedMoveObject(val ImmOrOwnedMoveObject: SuiObjectRef)
 
 data class SuiObjectRef(val objectId: String, val version: Int, val digest: String)
 
-data class SuiTransactionQueryFilter(val filter: TransactionQuery, val options: SuiTransactionBlockResponseOptions)
+data class SuiTransactionQueryFilter(val filter: TransactionQuery, val options: SuiTransactionBlockResponseOptions?)
 
 data class SuiObjectDataOptions(val showType: Boolean = true, val showContent: Boolean = false, val showDisplay: Boolean = false, val showStorageRebate: Boolean = false, val showPreviousTransaction: Boolean = false, val showOwner: Boolean = false, val showBcs: Boolean = false)
 
