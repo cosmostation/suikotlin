@@ -11,10 +11,12 @@ import net.i2p.crypto.eddsa.spec.EdDSAParameterSpec
 import net.i2p.crypto.eddsa.spec.EdDSAPrivateKeySpec
 import net.i2p.crypto.eddsa.spec.EdDSAPublicKeySpec
 import org.bouncycastle.jcajce.provider.digest.Blake2b
+import org.bouncycastle.util.encoders.Hex
 import java.security.MessageDigest
 import java.security.Signature
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
+
 
 object SuiKey {
     private const val MAC_SECRET_KEY = "ed25519 seed"
@@ -45,8 +47,22 @@ object SuiKey {
             pair = shaking(pathBuffer, pair.second)
         }
 
-        val keySpecs = EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519);
+        val keySpecs = EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519)
         val privateKeySpec = EdDSAPrivateKeySpec(pair.first, keySpecs)
+        val pubKeySpec = EdDSAPublicKeySpec(privateKeySpec.a, keySpecs)
+        val publicKey = EdDSAPublicKey(pubKeySpec)
+        val privateKey = EdDSAPrivateKey(privateKeySpec)
+        return EdDSAKeyPair(privateKey, publicKey)
+    }
+
+    fun getKeyPairByPrivateKey(privateKeyHex: String): EdDSAKeyPair {
+        val hex = if (privateKeyHex.startsWith("0x")) {
+            privateKeyHex.substring(2)
+        } else {
+            privateKeyHex
+        }
+        val keySpecs = EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519)
+        val privateKeySpec = EdDSAPrivateKeySpec(Hex.decode(hex), keySpecs)
         val pubKeySpec = EdDSAPublicKeySpec(privateKeySpec.a, keySpecs)
         val publicKey = EdDSAPublicKey(pubKeySpec)
         val privateKey = EdDSAPrivateKey(privateKeySpec)

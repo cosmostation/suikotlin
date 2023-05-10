@@ -18,6 +18,9 @@ class SampleViewModel : ViewModel() {
     private val _mnemonic = MutableLiveData<String>()
     val mnemonic: LiveData<String> get() = _mnemonic
 
+    private val _privateKey = MutableLiveData<String>()
+    val privateKey: LiveData<String> get() = _privateKey
+
     private val _keyPair = MutableLiveData<EdDSAKeyPair>()
     val keyPair: LiveData<EdDSAKeyPair> get() = _keyPair
 
@@ -44,6 +47,13 @@ class SampleViewModel : ViewModel() {
         } catch (e: Exception) {
             _toastMessage.postValue("Mnemonic load error.")
         }
+    }
+
+    fun loadPrivateKey(value: String) = viewModelScope.launch {
+        _privateKey.postValue(value)
+        val keyPair = SuiClient.instance.getKeyPairByPrivateKey(value)
+        _keyPair.postValue(keyPair)
+        _address.postValue(SuiClient.instance.getAddress(keyPair))
     }
 
     fun faucet(address: String) = viewModelScope.launch {
@@ -74,9 +84,9 @@ class SampleViewModel : ViewModel() {
     }
 
     fun transferObject(objectInfo: SuiObjectInfo, receiver: String, sender: String) = viewModelScope.launch {
-        val transfer = SuiClient.instance.transferSui(
-            objectInfo.objectId, receiver, sender, BigInteger("10000"), BigInteger("10000000")
-        )
+//        val transfer = SuiClient.instance.transferSui(
+//            objectInfo.objectId, receiver, sender, BigInteger("10000"), BigInteger("10000000")
+//        )
 //            val transfer = SuiClient.instance.moveCall(
 //                _address.value!!, "0x2", "devnet_nft", "mint", listOf(), listOf(
 //                    "Example NFT",
@@ -84,8 +94,7 @@ class SampleViewModel : ViewModel() {
 //                    "ipfs://bafkreibngqhl3gaa7daob4i2vccziay2jjlp435cf66vhono7nrvww53ty"
 //                ), null, 10000
 //            )
-//            val transfer =
-//                SuiClient.instance.transferObject(objectInfo.objectId, receiver, sender, 100)
+        val transfer = SuiClient.instance.transferObject(objectInfo.objectId, receiver, sender, BigInteger("10000"))
         transfer?.let { transferTxBytes ->
             _keyPair.value?.let { keyPair ->
                 val txBytes = Base64.getDecoder().decode(transferTxBytes.txBytes)

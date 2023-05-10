@@ -45,6 +45,8 @@ class SuiClient {
 
     fun getKeyPair(mnemonic: String) = SuiKey.getKeyPair(mnemonic)
 
+    fun getKeyPairByPrivateKey(privateKeyHex: String) = SuiKey.getKeyPairByPrivateKey(privateKeyHex)
+
     fun sign(keyPair: EdDSAKeyPair, data: ByteArray) = SuiKey.sign(keyPair, data)
 
     suspend fun dryRunTransactionBlock(txBytes: String): Any? {

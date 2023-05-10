@@ -8,6 +8,6 @@ class SampleApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         SuiClient.initialize()
-        SuiClient.configure(Network.Testnet())
+        SuiClient.configure(Network.Devnet())
     }
 }

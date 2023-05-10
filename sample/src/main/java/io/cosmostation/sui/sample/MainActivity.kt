@@ -1,16 +1,17 @@
 package io.cosmostation.sui.sample
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import io.cosmostation.sui.sample.databinding.ActivityMainBinding
 import io.cosmostation.suikotlin.SuiClient
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val viewModel: SampleViewModel by viewModels()
-    private val preloadMnemonic = "wing mammal best spend that cave decline zone legal affair demand pulp"
+    private val preloadMnemonic = ""
+    private val preloadPrivateKey = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,6 +28,10 @@ class MainActivity : AppCompatActivity() {
 
         binding.loadMnemonic.setOnClickListener {
             viewModel.loadMnemonic(preloadMnemonic)
+        }
+
+        binding.loadPrivateKey.setOnClickListener {
+            viewModel.loadPrivateKey(preloadPrivateKey)
         }
 
         binding.faucet.setOnClickListener {
@@ -59,6 +64,10 @@ class MainActivity : AppCompatActivity() {
             binding.mnemonic.text = it
         }
 
+        viewModel.privateKey.observe(this) {
+            binding.privateKey.text = it
+        }
+
         viewModel.keyPair.observe(this) {
             Toast.makeText(this@MainActivity, "Key loaded !", Toast.LENGTH_SHORT).show()
         }
@@ -68,8 +77,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         viewModel.objectInfos.observe(this) {
-            Toast.makeText(this@MainActivity, "${it.size} Objects loaded !", Toast.LENGTH_SHORT)
-                .show()
+            Toast.makeText(this@MainActivity, "${it.size} Objects loaded !", Toast.LENGTH_SHORT).show()
         }
 
         viewModel.objectDetails.observe(this) {

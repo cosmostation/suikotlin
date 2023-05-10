@@ -14,6 +14,13 @@
         tools:text="mnemonic" />
 
     <TextView
+        android:id="@+id/private_key"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        tools:text="privatekey" />
+
+    <TextView
         android:id="@+id/address"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -33,6 +40,13 @@
         android:layout_height="wrap_content"
         android:padding="10dp"
         android:text="load mnemonic" />
+
+    <Button
+        android:id="@+id/load_private_key"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="load private key" />
 
     <Button
         android:id="@+id/faucet"
