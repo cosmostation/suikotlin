@@ -10,7 +10,7 @@ Android SDK for Sui
 ## Dependency
 
 ```
-implementation 'com.github.cosmostation:suikotlin:0.1.2'
+implementation 'com.github.cosmostation:suikotlin:0.3.0'
 ```
 
 
