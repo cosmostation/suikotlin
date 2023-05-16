@@ -1,7 +1,7 @@
 package io.cosmostation.suikotlin.model
 
 sealed class Network(val name: String, val rpcUrl: String, val faucetUrl: String) {
-    class Mainnet : Network("Mainnet", "https://sui-mainnet-us-1.cosmostation.io", "")
+    class Mainnet : Network("Mainnet", "https://sui-mainnet-us-2.cosmostation.io", "")
 
     class Devnet : Network("Devnet", "https://sui-devnet-kr-1.cosmostation.io", "https://faucet.devnet.sui.io")
 
