@@ -1,6 +1,6 @@
 package io.cosmostation.suikotlin.model
 
-data class SuiObjectInfo(val objectId: String, val version: Int, val digest: String, val type: String, val content: Any, val owner: SuiObjectOwner, val previousTransaction: String)
+data class SuiObjectInfo(val objectId: String, val version: Int, val digest: String, val type: String, val display: SuiObjectDisplay, val content: Any, val owner: SuiObjectOwner, val previousTransaction: String)
 
 data class SuiObjectData(val data: SuiObjectInfo)
 
@@ -13,6 +13,12 @@ data class SuiTransactionBlockResponseOptions(val showInput: Boolean = false, va
 data class SuiTransaction(val digest: String, val transaction: Any, val effects: Any, val balanceChanges: Any, val timestampMs: Long)
 
 data class SuiObjectOwner(val AddressOwner: String)
+
+data class SuiObjectDisplay(val data: SuiDisplayInfo)
+
+data class SuiDisplayInfo(val description: String, val kiosk: String, val image_url: String, val link: String, val name: String, val owner: String)
+
+data class SuiMultiObjectInfo(val result: List<SuiObjectData>)
 
 data class SuiWrappedTxBytes(val txBytes: String, val gas: List<SuiObjectRef>, val inputObjects: List<ImmOrOwnedMoveObject>)
 
