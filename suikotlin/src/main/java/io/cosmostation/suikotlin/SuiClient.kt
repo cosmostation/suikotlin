@@ -59,10 +59,11 @@ class SuiClient {
         val result = ApiService.create().postJsonRpcRequest(request).body()?.result
         return Gson().fromJson(Gson().toJson(result), SuiObjectDataResult::class.java).data.map { it.data }
     }
-
-    suspend fun getMultiObjectDetail(objectIds: List<String>): Any? {
-        val request = JsonRpcRequest("sui_multiGetObjects", listOf(objectIds, SuiObjectResponseQuery(null, SuiObjectDataOptions(showContent = true))))
-        return ApiService.create().postJsonRpcRequest(request).body()?.result
+    
+    suspend fun getMultiObjectsById(objectIds: List<String?>, options: SuiObjectDataOptions? = SuiObjectDataOptions(showContent = true)): List<SuiObjectInfo> {
+        val request = JsonRpcRequest("sui_multiGetObjects", listOf(objectIds, options))
+        val result = ApiService.create().postJsonRpcRequest(request).body()
+        return Gson().fromJson(Gson().toJson(result), SuiMultiObjectInfo::class.java).result.map { it.data }
     }
 
     suspend fun getTransactions(transactionQuery: TransactionQuery, nextOffset: String? = null, limit: Int? = null, descending: Boolean = false, options: SuiTransactionBlockResponseOptions? = SuiTransactionBlockResponseOptions(showInput = true, showEffects = true, showBalanceChanges = true)): List<SuiTransaction> {
