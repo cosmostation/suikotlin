@@ -1,6 +1,5 @@
 package io.cosmostation.suikotlin.key
 
-import com.develop.mnemonic.MnemonicUtils
 import io.cosmostation.suikotlin.model.EdDSAKeyPair
 import net.i2p.crypto.eddsa.EdDSAEngine
 import net.i2p.crypto.eddsa.EdDSAPrivateKey
@@ -10,6 +9,7 @@ import net.i2p.crypto.eddsa.spec.EdDSANamedCurveTable
 import net.i2p.crypto.eddsa.spec.EdDSAParameterSpec
 import net.i2p.crypto.eddsa.spec.EdDSAPrivateKeySpec
 import net.i2p.crypto.eddsa.spec.EdDSAPublicKeySpec
+import org.bitcoinj.crypto.MnemonicCode
 import org.bouncycastle.jcajce.provider.digest.Blake2b
 import org.bouncycastle.util.encoders.Hex
 import java.security.MessageDigest
@@ -38,7 +38,7 @@ object SuiKey {
     }
 
     fun getKeyPair(mnemonic: String, path: List<Int> = SUI_HD_PATH): EdDSAKeyPair {
-        val seedBytes: ByteArray = MnemonicUtils.generateSeed(mnemonic, "")
+        val seedBytes: ByteArray = MnemonicCode.toSeed(mnemonic.split(" "), "")
         var pair = shaking(seedBytes, MAC_SECRET_KEY.toByteArray())
         path.forEach {
             val buffer = ByteArray(size = 4)

@@ -33,15 +33,14 @@ android {
 }
 
 dependencies {
+    implementation("org.bitcoinj:bitcoinj-core:0.16.3") {
+        exclude group: "org.bouncycastle"
+    }
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
     implementation 'com.squareup.retrofit2:converter-moshi:2.9.0'
     implementation group: 'org.bouncycastle', name: 'bcprov-jdk15to18', version: '1.72'
-    implementation('com.lgann.develop:mnemonic-sdk:1.0.0') {
-        exclude group: 'org.slf4j'
-    }
-
     implementation 'com.squareup.okhttp3:okhttp:4.9.1'
     implementation 'com.squareup.okhttp3:logging-interceptor:4.9.0'
     implementation 'net.i2p.crypto:eddsa:0.3.0'
