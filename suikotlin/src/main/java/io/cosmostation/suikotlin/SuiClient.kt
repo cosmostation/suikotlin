@@ -1,15 +1,32 @@
 package io.cosmostation.suikotlin
 
-import com.develop.mnemonic.MnemonicUtils
 import com.google.gson.Gson
 import io.cosmostation.suikotlin.api.ApiService
 import io.cosmostation.suikotlin.api.FaucetService
 import io.cosmostation.suikotlin.key.SuiKey
-import io.cosmostation.suikotlin.model.*
+import io.cosmostation.suikotlin.model.EdDSAKeyPair
+import io.cosmostation.suikotlin.model.FixedAmountRequest
+import io.cosmostation.suikotlin.model.JsonRpcRequest
+import io.cosmostation.suikotlin.model.Network
+import io.cosmostation.suikotlin.model.Recipient
+import io.cosmostation.suikotlin.model.SuiMultiObjectInfo
+import io.cosmostation.suikotlin.model.SuiObjectDataOptions
+import io.cosmostation.suikotlin.model.SuiObjectDataResult
+import io.cosmostation.suikotlin.model.SuiObjectInfo
+import io.cosmostation.suikotlin.model.SuiObjectResponseQuery
+import io.cosmostation.suikotlin.model.SuiTransaction
+import io.cosmostation.suikotlin.model.SuiTransactionBlockResponseOptions
+import io.cosmostation.suikotlin.model.SuiTransactionDataResult
+import io.cosmostation.suikotlin.model.SuiTransactionQueryFilter
+import io.cosmostation.suikotlin.model.SuiWrappedTxBytes
+import io.cosmostation.suikotlin.model.TransactionQuery
+import org.bitcoinj.crypto.MnemonicCode
+import org.bitcoinj.wallet.DeterministicSeed
 import org.bouncycastle.jce.provider.BouncyCastleProvider
 import java.math.BigInteger
+import java.security.SecureRandom
 import java.security.Security
-import java.util.*
+import java.util.Base64
 
 class SuiClient {
     companion object {
@@ -37,7 +54,14 @@ class SuiClient {
 
     var currentNetwork: Network = Network.Devnet()
 
-    fun generateMnemonic(): String = MnemonicUtils.generateMnemonic()
+    fun generateMnemonic(): String {
+
+        val secureRandom = SecureRandom()
+        val entropy = ByteArray(DeterministicSeed.DEFAULT_SEED_ENTROPY_BITS / 8)
+        secureRandom.nextBytes(entropy)
+        val mnemonicWords = MnemonicCode.INSTANCE.toMnemonic(entropy)
+        return mnemonicWords.joinToString(" ")
+    }
 
     fun getAddress(mnemonic: String) = SuiKey.getSuiAddress(mnemonic)
 
@@ -59,7 +83,7 @@ class SuiClient {
         val result = ApiService.create().postJsonRpcRequest(request).body()?.result
         return Gson().fromJson(Gson().toJson(result), SuiObjectDataResult::class.java).data.map { it.data }
     }
-    
+
     suspend fun getMultiObjectsById(objectIds: List<String?>, options: SuiObjectDataOptions? = SuiObjectDataOptions(showContent = true)): List<SuiObjectInfo> {
         val request = JsonRpcRequest("sui_multiGetObjects", listOf(objectIds, options))
         val result = ApiService.create().postJsonRpcRequest(request).body()
