@@ -66,7 +66,7 @@ class SampleViewModel : ViewModel() {
 
     fun getObjectsDetails() = viewModelScope.launch {
         _objectInfos.value?.let { objects ->
-            val multiObjects = SuiClient.instance.getMultiObjectDetail(objects.map { it.objectId })
+            val multiObjects = SuiClient.instance.getMultiObjectsById(objects.map { it.objectId })
             _toastMessage.postValue(Gson().toJson(multiObjects))
         }
     }
